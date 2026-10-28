@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IoT Feedback Admin</title>
+<style>
+body{font-family:system-ui,Arial,sans-serif;background:#f4f7fc;color:#17233f;margin:0;padding:24px}
+main{max-width:1100px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+h1{margin-bottom:4px}.muted{color:#66738e;font-size:14px}.panel{background:#fff;border:1px solid #e1e8f2;border-radius:15px;padding:20px;margin-top:20px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:12px;border-bottom:1px solid #e8edf5;vertical-align:top}th{background:#f7f9fd}
+a,.btn{display:inline-block;background:#3157d5;color:white;text-decoration:none;padding:10px 14px;border-radius:9px;border:0;font-weight:700;cursor:pointer}
+.btn-light{background:#eef2fa;color:#34415e}.empty{padding:30px;text-align:center;color:#66738e}
+</style></head><body><main>
+<div class="top"><div><h1>IoT Teacher Feedback — Admin</h1><div class="muted">Saved submissions: {{ total }}</div></div><div><a href="/admin/export.csv">Export CSV</a> <a class="btn-light" href="/">Open form</a></div></div>
+<div class="panel">
+{% if responses %}
+<table><thead><tr><th>ID / Date</th><th>Student</th><th>Class details</th><th>Teacher</th><th>Ratings</th><th>Suggestions</th></tr></thead><tbody>
+{% for r in responses %}
+<tr><td>#{{ r.id }}<br>{{ r.created_at }}</td><td>{{ r.student_name }}<br><span class="muted">{{ r.student_id or '' }}</span></td><td>{{ r.department }}<br>{{ r.year }} · {{ r.semester }}</td><td>{{ r.teacher }}</td>
+<td>{% for k,v in r.ratings.items() %}<div>{{ k }}: {{ v }}/5</div>{% endfor %}<b>Overall: {{ r.overall or '—' }}/5</b></td>
+<td><b>Liked:</b> {{ r.best_part or '—' }}<br><b>Improve:</b> {{ r.improve or '—' }}<br><b>Other:</b> {{ r.suggestion or '—' }}<br><b>Topics:</b> {{ r.topics|join(', ') or '—' }}</td></tr>
+{% endfor %}
+</tbody></table>
+{% else %}<div class="empty">No feedback submissions yet. Share the form link after deploying the app.</div>{% endif %}
+</div><p class="muted">Keep this admin page private. Use a strong ADMIN_PASSWORD before hosting publicly.</p>
+</main></body></html>
